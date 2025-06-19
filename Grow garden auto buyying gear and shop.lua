@@ -5,9 +5,13 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
     vu:ClickButton2(Vector2.new())
 end)
 
--- Auto Reconnect
+-- Auto Reconnect and auto Gui Buy Egg
+local function pro() 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Auto%20Reconnect.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Auto%20buy%20egg%20GUI.lua"))()
+end
 
+pro() 
 -- Game Services
 local gameEvents = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents")
 

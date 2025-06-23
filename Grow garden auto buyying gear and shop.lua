@@ -1,20 +1,24 @@
+-- Anti-AFK
 local vu = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
     vu:CaptureController()
     vu:ClickButton2(Vector2.new())
 end)
 
+-- Auto Reconnect + Auto Buy Egg GUI
 local function pro()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Auto%20Reconnect.lua"))()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Auto%20buy%20egg%20GUI.lua"))()
 end
 pro()
 
+-- Stock Auto Buyer
 local gameEvents = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents")
 
 local gearList = {
     "Basic Sprinkler", "Advanced Sprinkler", "Master Sprinkler",
-    "Lightning Rod", "Godly Sprinkler", "Friendship Pot"
+    "Lightning Rod", "Godly Sprinkler", "Friendship Pot",
+    "Tanning Mirror", "Watering Can"
 }
 
 local itemList = {
@@ -22,7 +26,7 @@ local itemList = {
     "Grape", "Bamboo", "Ember Lily", "Sugar Apple",
     "Feijoa", "Loquat", "Prickly Pear", "Bell Pepper",
     "Kiwi", "Pineapple", "Banana", "Avocado",
-    "Green Apple", "Cauliflower"
+    "Green Apple", "Cauliflower", "Tomato"
 }
 
 local nightItemList = {
@@ -66,6 +70,6 @@ spawn(function()
             task.wait()
         end
 
-        task.wait() 
+        task.wait()
     end
 end)

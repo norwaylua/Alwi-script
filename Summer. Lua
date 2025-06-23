@@ -1,0 +1,75 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+local summerEvent = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("SummerHarvestRemoteEvent")
+
+local function showNotification(text, color)
+	local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+	gui.Name = "SummerEventNotification"
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	local frame = Instance.new("TextLabel")
+	frame.Size = UDim2.new(0.4, 0, 0.08, 0)
+	frame.Position = UDim2.new(0.5, 0, -0.2, 0)
+	frame.AnchorPoint = Vector2.new(0.5, 0)
+	frame.BackgroundColor3 = color
+	frame.TextColor3 = Color3.new(1, 1, 1)
+	frame.TextScaled = true
+	frame.Font = Enum.Font.SourceSansBold
+	frame.Text = text
+	frame.BorderSizePixel = 0
+	frame.BackgroundTransparency = 0.1
+	frame.Parent = gui
+
+	local tweenIn = TweenService:Create(frame, TweenInfo.new(0.4), {
+		Position = UDim2.new(0.5, 0, 0.05, 0)
+	})
+	tweenIn:Play()
+	tweenIn.Completed:Wait()
+
+	task.wait(2.5)
+
+	local tweenOut = TweenService:Create(frame, TweenInfo.new(0.4), {
+		Position = UDim2.new(0.5, 0, -0.2, 0)
+	})
+	tweenOut:Play()
+	tweenOut.Completed:Wait()
+
+	gui:Destroy()
+end
+
+getgenv().Autosubmitall = Workspace:GetAttribute("SummerHarvest")
+local lastStatus = getgenv().Autosubmitall
+
+if lastStatus then
+	showNotification("✅ Summer Event Started!", Color3.fromRGB(100, 200, 100))
+else
+	showNotification("❌ Summer Event Not Started!", Color3.fromRGB(255, 100, 100))
+end
+
+coroutine.wrap(function()
+	while true do
+		if getgenv().Autosubmitall then
+			summerEvent:FireServer("SubmitAllPlants")
+		end
+		task.wait(1)
+	end
+end)()
+
+Workspace:GetAttributeChangedSignal("SummerHarvest"):Connect(function()
+	local currentStatus = Workspace:GetAttribute("SummerHarvest")
+	getgenv().Autosubmitall = currentStatus
+
+	if currentStatus ~= lastStatus then
+		if currentStatus then
+			showNotification("✅ Summer Event Started!", Color3.fromRGB(100, 200, 100))
+		else
+			showNotification("⚠️ Summer Event Ended!", Color3.fromRGB(255, 150, 0))
+		end
+	end
+
+	lastStatus = currentStatus
+end)

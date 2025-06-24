@@ -7,7 +7,7 @@ end)
 
 -- Auto Reconnect + Auto Buy Egg GUI
 local function pro()
-    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/No-Lag%20Hub%20V1%20Grow%20A%20garden.lua"))()
+    loadstring(game:HttpGetAsync("n"))()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Auto%20Reconnect.lua"))()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Auto%20buy%20egg%20GUI.lua"))()
 end

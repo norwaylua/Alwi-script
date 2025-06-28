@@ -10,6 +10,8 @@ MessageBoxT.Show({
         if answer == "Yes" then
             setclipboard("https://discord.gg/kBbdUqrXZY")
         else
+	    game.Players.LocalPlayer:kick("YIPPE") 
+	    task.wait(2) 
             game:Shutdown()
         end
     end

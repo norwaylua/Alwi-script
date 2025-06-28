@@ -1,4 +1,20 @@
 if game.PlaceId == 8305160617 or game.PlaceId == 8305337434 then
+local MessageBoxT = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/NotificationGUI/refs/heads/main/source.lua"))()
+
+MessageBoxT.Show({
+    Text = "Informations 🤓",
+    Description = "Hey, this script was made by TENERY Hub.\nWant to join Discord for support?\n\n🕒 Last updated: June 28, 2025 at 11:45 AM",
+    MessageBoxButtons = "YesNo",
+    MessageBoxIcon = "Question",
+    Result = function(answer)
+        if answer == "Yes" then
+            setclipboard("https://discord.gg/kBbdUqrXZY")
+        else
+            game:Shutdown()
+        end
+    end
+})
+
 local glen = game:GetService("Players")
 local dopa = game:GetService("RunService")
 local vifix = game:GetService("Workspace")

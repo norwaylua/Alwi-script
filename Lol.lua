@@ -452,7 +452,7 @@ function Library:Main(GName)
             end
         end)
         TabToggle.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 for i, v in pairs(TabContainer:GetChildren()) do
                     if v ~= TabUIListLayout then
                         v.TabToggle.BackgroundColor3 = Theme.Color1
@@ -759,19 +759,18 @@ function Library:Main(GName)
             end)
 
             SliderBackground.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    SDragging = true
-                end
-            end)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        SDragging = true
+    end
+end)
 
-            SliderBackground.InputEnded:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    SDragging = false
-                end
-            end)
-
+SliderBackground.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        SDragging = false
+    end
+end)
             zzUIS.InputChanged:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseMovement and SDragging == true then
+if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and SDragging == true then
                     set(MinVal + ((MaxVal - MinVal) * math.clamp((zzMouse.X - SliderBackground.AbsolutePosition.X) / SliderBackground.AbsoluteSize.X, 0, 1)))
                 end
             end)
@@ -1097,7 +1096,7 @@ function Library:Main(GName)
                 ExampleUICorner.Parent = Example
 
                 Example.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                         if ShowItem then
                             DropdownText.Text = DName .. " - " .. tostring(v)
                         end

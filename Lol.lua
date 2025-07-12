@@ -608,19 +608,19 @@ function Library:Main(GName)
             ToggleToggle.TextColor3 = Color3.fromRGB(0, 0, 0)
             ToggleToggle.TextSize = 14.000
             ToggleToggle.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    CurrentState = not CurrentState
-                    pcall(callback, CurrentState)
-                    Config[TName][TGName] = CurrentState
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        CurrentState = not CurrentState
+        pcall(callback, CurrentState)
+        Config[TName][TGName] = CurrentState
 
-                    if not CurrentState then
-                        ToggleToggle.BackgroundColor3 = Theme.Color1
-                    else
-                        ToggleToggle.BackgroundColor3 = Theme.Color2
-                    end
-                    Ripple(ToggleFrame)
-                end
-            end)
+        if not CurrentState then
+            ToggleToggle.BackgroundColor3 = Theme.Color1
+        else
+            ToggleToggle.BackgroundColor3 = Theme.Color2
+        end
+        Ripple(ToggleFrame)
+    end
+end)
             table.insert(IList, ToggleToggle)
 
             ToggleToggleUICorner.CornerRadius = UDim.new(0, 4)

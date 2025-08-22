@@ -5,7 +5,7 @@ if game.PlaceId == 16459184806 then
     game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("PromtUGCBuyRemote"):FireServer()
 
     for ifuseethisuskiddedlmaoo = 1, 10 do
-        print("Made by Tenery Hub Wanna support join we discord! ")
+        print("Made by Tenery Hub Wanna support join we discord! on your clipboard")
     end
 
     wait(3) 

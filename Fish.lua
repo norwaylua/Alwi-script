@@ -2,11 +2,12 @@
 --_G.BringEnabled = true   -- Toggle NPC bring
 --_G.NoclipEnabled = true  -- Toggle noclip
 --_G.MakeSafeBase = true   -- Toggle safe platform
-
+--getgenv().firetools = true
 -- // Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
+local Player = Players.LocalPlayer
 
 local LocalPlayer = Players.LocalPlayer
 local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
@@ -37,6 +38,28 @@ RunService.Stepped:Connect(function()
             if part:IsA("BasePart") then
                 part.CanCollide = false
             end
+        end
+    end
+end)
+task.spawn(function()
+    while task.wait() do
+        if not getgenv().firetools then break end
+
+        local char = Player.Character or Player.CharacterAdded:Wait()
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then continue end
+
+        local tool = Player.Backpack:FindFirstChildWhichIsA("Tool")
+        
+        -- Equip tool if not already equipped
+        if tool and not char:FindFirstChildWhichIsA("Tool") then
+            hum:EquipTool(tool)
+        end
+
+        -- Activate the tool if equipped
+        local equippedTool = char:FindFirstChildWhichIsA("Tool")
+        if equippedTool then
+            equippedTool:Activate()
         end
     end
 end)

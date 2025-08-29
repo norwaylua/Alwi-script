@@ -3,6 +3,7 @@
 --_G.NoclipEnabled = true  -- Toggle noclip
 --_G.MakeSafeBase = true   -- Toggle safe platform
 --getgenv().firetools = true
+--_G.Auto_Spins_AutoclaimGitf = true
 -- // Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -76,6 +77,25 @@ task.spawn(function()
         end
     end
 end)
+
+------
+-- auto spins and auto claim Gitfs 
+------
+while _G.Auto_Spins_AutoclaimGitf do
+    for gift = 1, 12 do
+        local args = {
+            "Gift" .. gift
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("ClaimGift"):FireServer(unpack(args))
+        task.wait(0.2)
+    end
+
+    local spinSignal = game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("Spin")
+    pcall(function()
+        spinSignal:InvokeServer()
+    end)
+end
+
 
 -------------------------------------------------
 -- Safe Platform

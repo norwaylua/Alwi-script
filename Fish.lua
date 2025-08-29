@@ -41,6 +41,19 @@ RunService.Stepped:Connect(function()
         end
     end
 end)
+------
+-- Anti afk
+-------
+local vu = game:GetService("VirtualUser")
+
+game.Players.LocalPlayer.Idled:Connect(function()
+    vu:CaptureController()
+    vu:ClickButton2(Vector2.new())
+end)
+
+----
+-- Niggerw auto swing
+----
 task.spawn(function()
     while task.wait() do
         if not getgenv().firetools then break end

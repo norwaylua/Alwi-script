@@ -5,7 +5,8 @@
 --getgenv().firetools = true
 --_G.Auto_Spins_AutoclaimGitf = true -- fixed laters due error
 -- // Services
-loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Skip%20timer.lua", true))()
+if game.PlaceId == 79704652105017 then
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Skip%20timer.lua", true))()
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -269,3 +270,4 @@ getgenv().Range = 1000000 -- dont edit this code frfr
 getgenv().AutoSpinGift = false -- most anyoning 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Roblox/refs/heads/main/H.lua"))()
 ]])
+end

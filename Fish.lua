@@ -499,22 +499,27 @@ end)
 -- auto spins and auto claim Gitfs -- kinda broken
 ------
 
---[[
-while _G.Auto_Spins_AutoclaimGitf do
-    for gift = 1, 12 do
-        local args = {
-            "Gift" .. gift
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("ClaimGift"):FireServer(unpack(args))
-        task.wait(0.2)
-    end
+task.spawn(function()
+    while task.wait() do
+        if not getgenv().Auto_Spins_AutoclaimGitf then
+            break
+        end
 
-    local spinSignal = game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("Spin")
-    pcall(function()
-        spinSignal:InvokeServer()
-    end)
-end
-]]
+        local spinSignal = game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("Spin")
+        pcall(function()
+            spinSignal:InvokeServer()
+        end)
+
+        for gift = 1, 12 do
+            local args = {
+                "Gift" .. gift
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("ClaimGift"):FireServer(unpack(args))
+            task.wait(0.2)
+        end
+    end
+end)
+
 
 -------------------------------------------------
 -- Safe Platform

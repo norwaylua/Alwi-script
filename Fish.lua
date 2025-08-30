@@ -5,7 +5,7 @@
 --getgenv().firetools = true
 --_G.Auto_Spins_AutoclaimGitf = true -- fixed laters due error
 -- // Services
---loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Skip%20timer.lua", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/norwaylua/Alwi-script/refs/heads/main/Skip%20timer.lua", true))()
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")

@@ -89,7 +89,7 @@ desc.Name = "Description"
 desc.Size = UDim2.new(0, 220, 0, 48)
 desc.Position = UDim2.new(0, 100, 0, 40)
 desc.BackgroundTransparency = 1
-desc.Text = "This UI made BY Cici"
+desc.Text = "This UI made BY Cici [Patched]"
 desc.Font = Enum.Font.Gotham
 desc.TextSize = 16
 desc.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -152,7 +152,7 @@ hint.Name = "Hint"
 hint.Size = UDim2.new(0, 200, 0, 18)
 hint.Position = UDim2.new(0, 100, 1, -20)
 hint.BackgroundTransparency = 1
-hint.Text = "This script open source | A tips : use auto exc for afk overnight!"
+hint.Text = "This script open source "
 hint.Font = Enum.Font.Gotham
 hint.TextSize = 12
 hint.TextColor3 = Color3.fromRGB(200,200,200)
@@ -297,7 +297,7 @@ desc.Name = "Description"
 desc.Size = UDim2.new(0, 220, 0, 48)
 desc.Position = UDim2.new(0, 100, 0, 40)
 desc.BackgroundTransparency = 1
-desc.Text = "This UI made BY Cici"
+desc.Text = "This UI made BY Cici Patched"
 desc.Font = Enum.Font.Gotham
 desc.TextSize = 16
 desc.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -422,128 +422,3 @@ delay(100, function()
         closeAndDestroy()
     end
 end)
--- main script 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
-local Player = Players.LocalPlayer
-
-local LocalPlayer = Players.LocalPlayer
-local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
-
--------------------------------------------------
--- Bring NPCs
--------------------------------------------------
-RunService.RenderStepped:Connect(function()
-    if _G.BringEnabled and hrp then
-        for _, npc in ipairs(workspace.Enemys:GetChildren()) do
-            local npcHRP = npc:FindFirstChild("HumanoidRootPart")
-            if npcHRP then
-                pcall(function()
-                    npcHRP.CFrame = hrp.CFrame * CFrame.new(0, 0, -4) -- always in front
-                end)
-            end
-        end
-    end
-end)
-
--------------------------------------------------
--- Noclip
--------------------------------------------------
-RunService.Stepped:Connect(function()
-    if _G.NoclipEnabled and LocalPlayer.Character then
-        for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
-            end
-        end
-    end
-end)
-------
--- Anti afk
--------
-local vu = game:GetService("VirtualUser")
-
-game.Players.LocalPlayer.Idled:Connect(function()
-    vu:CaptureController()
-    vu:ClickButton2(Vector2.new())
-end)
-
-----
--- Niggerw auto swing
-----
-task.spawn(function()
-    while task.wait() do
-        if not getgenv().firetools then break end
-
-        local char = Player.Character or Player.CharacterAdded:Wait()
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hum then continue end
-
-        local tool = Player.Backpack:FindFirstChildWhichIsA("Tool")
-        
-        -- Equip tool if not already equipped
-        if tool and not char:FindFirstChildWhichIsA("Tool") then
-            hum:EquipTool(tool)
-        end
-
-        -- Activate the tool if equipped
-        local equippedTool = char:FindFirstChildWhichIsA("Tool")
-        if equippedTool then
-            equippedTool:Activate()
-        end
-    end
-end)
-
-------
--- auto spins and auto claim Gitfs -- kinda broken
-------
-
-task.spawn(function()
-    while task.wait() do
-        if not getgenv().Auto_Spins_AutoclaimGitf then
-            break
-        end
-
-        local spinSignal = game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("Spin")
-        pcall(function()
-            spinSignal:InvokeServer()
-        end)
-
-        for gift = 1, 12 do
-            local args = {
-                "Gift" .. gift
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Signals"):WaitForChild("ClaimGift"):FireServer(unpack(args))
-            task.wait(0.2)
-        end
-    end
-end)
-
-
--------------------------------------------------
--- Safe Platform
--------------------------------------------------
-if _G.MakeSafeBase then
-    local circle = Workspace:FindFirstChild("Circle")
-    if not circle then
-        circle = Instance.new("Part")
-        circle.Size = Vector3.new(100, 0.1, 100)
-        circle.Anchored = true
-        circle.Transparency = 0.4
-        circle.CFrame = CFrame.new(-0.727, 655.813, -3.282)
-        circle.Name = "Circle"
-        circle.Parent = Workspace
-    end
-
-    -- Teleport player onto the circle part
-    if hrp then
-        hrp.CFrame = circle.CFrame + Vector3.new(0, 5, 0) -- put player above platform
-    end
-
-    -- Optional pivot reposition
-    if char then
-        char:PivotTo(CFrame.new(-0.711, 662.58, -3.298))
-    end
-end

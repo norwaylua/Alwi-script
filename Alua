@@ -3,15 +3,17 @@ local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
--- GUI Setup
+if LocalPlayer.PlayerGui:FindFirstChild("EnemyNameGui") then
+    LocalPlayer.PlayerGui.EnemyNameGui:Destroy()
+end
+
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "EnemyNameGui"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
--- Background Frame
 local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0, 320, 0, 100)
+Frame.Size = UDim2.new(0, 320, 0, 120)
 Frame.Position = UDim2.new(0.5, -160, 0, 40)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.BackgroundTransparency = 0.1
@@ -20,55 +22,157 @@ Frame.Active = true
 local UICorner = Instance.new("UICorner", Frame)
 UICorner.CornerRadius = UDim.new(0, 12)
 
--- Stroke for RGB glow
 local UIStroke = Instance.new("UIStroke", Frame)
 UIStroke.Thickness = 3
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
--- Target Name Label
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+ToggleButton.Size = UDim2.new(0, 60, 0, 25)
+ToggleButton.Position = UDim2.new(0.5, -30, 0, 5)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextScaled = true
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Text = "Hide"
+
+local UICornerBtn = Instance.new("UICorner", ToggleButton)
+UICornerBtn.CornerRadius = UDim.new(0, 6)
+
 local TargetLabel = Instance.new("TextLabel", Frame)
-TargetLabel.Size = UDim2.new(1, 0, 0.4, 0)
+TargetLabel.Size = UDim2.new(1, 0, 0.3, 0)
+TargetLabel.Position = UDim2.new(0, 0, 0.2, 0)
 TargetLabel.BackgroundTransparency = 1
 TargetLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TargetLabel.TextScaled = true
 TargetLabel.Font = Enum.Font.GothamBold
 TargetLabel.Text = "Target: None"
 
--- Health Value Label
 local HealthLabel = Instance.new("TextLabel", Frame)
-HealthLabel.Size = UDim2.new(1, 0, 0.3, 0)
-HealthLabel.Position = UDim2.new(0, 0, 0.4, 0)
+HealthLabel.Size = UDim2.new(1, 0, 0.2, 0)
+HealthLabel.Position = UDim2.new(0, 0, 0.55, 0)
 HealthLabel.BackgroundTransparency = 1
 HealthLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 HealthLabel.TextScaled = true
 HealthLabel.Font = Enum.Font.Gotham
 HealthLabel.Text = "Health: 0 / 0"
 
--- Health Bar Background
 local HealthBack = Instance.new("Frame", Frame)
-HealthBack.Size = UDim2.new(1, -20, 0.15, 0)
-HealthBack.Position = UDim2.new(0, 10, 0.75, 0)
+HealthBack.Size = UDim2.new(1, -20, 0.12, 0)
+HealthBack.Position = UDim2.new(0, 10, 0.8, 0)
 HealthBack.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 
 local HealthCorner = Instance.new("UICorner", HealthBack)
 HealthCorner.CornerRadius = UDim.new(0, 6)
 
--- Health Bar Fill
 local HealthFill = Instance.new("Frame", HealthBack)
-HealthFill.Size = UDim2.new(1, 0, 1, 0)
+HealthFill.Size = UDim2.new(0, 0, 1, 0)
 HealthFill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 
 local FillCorner = Instance.new("UICorner", HealthFill)
 FillCorner.CornerRadius = UDim.new(0, 6)
 
--- 🌈 Arcelik RGB Effect (whole UI border)
 task.spawn(function()
     local hue = 0
     while task.wait(0.03) do
         hue = (hue + 0.01) % 1
         local rgb = Color3.fromHSV(hue, 1, 1)
-        UIStroke.Color = rgb -- RGB Border
-        TargetLabel.TextColor3 = rgb -- Also makes text glow rainbow
+        UIStroke.Color = rgb
+        TargetLabel.TextColor3 = rgb
+        ToggleButton.TextColor3 = rgb
+    end
+end)
+
+local dragging = false
+local dragStart, startPos
+
+local function updateInput(input)
+    local delta = input.Position - dragStart
+    Frame.Position = UDim2.new(
+        startPos.X.Scale,
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale,
+        startPos.Y.Offset + delta.Y
+    )
+end
+
+Frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or
+       input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = Frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch) then
+        updateInput(input)
+    end
+end)
+
+ToggleButton.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+    ToggleButton.Text = Frame.Visible and "Hide" or "Show"
+end)
+
+task.spawn(function()
+    while task.wait(0.2) do
+        if not Frame.Visible then continue end
+        local character = LocalPlayer.Character
+        local hrp = character and character:FindFirstChild("HumanoidRootPart")
+        if not hrp then 
+            TargetLabel.Text = "Target: None"
+            HealthLabel.Text = "Health: 0 / 0"
+            HealthFill.Size = UDim2.new(0, 0, 1, 0)
+            continue 
+        end
+
+        local closestEnemy, shortestDistance = nil, math.huge
+        for _, v in pairs(workspace.Enemys:GetChildren()) do
+            if v:IsA("Model") then
+                local hum = v:FindFirstChild("Humanoid")
+                local enemyHRP = v:FindFirstChild("HumanoidRootPart")
+                if hum and enemyHRP and hum.Health > 0 then
+                    for _, part in pairs(v:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                    local distance = (hrp.Position - enemyHRP.Position).Magnitude
+                    if distance < shortestDistance then
+                        closestEnemy = v
+                        shortestDistance = distance
+                    end
+                end
+            end
+        end
+
+        if closestEnemy then
+            local hum = closestEnemy:FindFirstChild("Humanoid")
+            TargetLabel.Text = "Target: " .. (closestEnemy.Name or "Unknown")
+            if hum then
+                HealthLabel.Text = "Health: " .. math.floor(hum.Health) .. " / " .. math.floor(hum.MaxHealth)
+                local healthPercent = hum.Health / hum.MaxHealth
+                HealthFill:TweenSize(UDim2.new(healthPercent, 0, 1, 0), "Out", "Quad", 0.2, true)
+                if healthPercent > 0.6 then
+                    HealthFill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+                elseif healthPercent > 0.3 then
+                    HealthFill.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+                else
+                    HealthFill.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                end
+            end
+        else
+            TargetLabel.Text = "Target: None"
+            HealthLabel.Text = "Health: 0 / 0"
+            HealthFill:TweenSize(UDim2.new(0, 0, 1, 0), "Out", "Quad", 0.2, true)
+        end
     end
 end)
 

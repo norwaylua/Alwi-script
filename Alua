@@ -14,11 +14,16 @@ local Frame = Instance.new("Frame", ScreenGui)
 Frame.Size = UDim2.new(0, 320, 0, 100)
 Frame.Position = UDim2.new(0.5, -160, 0, 40)
 Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Frame.BackgroundTransparency = 0.2
+Frame.BackgroundTransparency = 0.1
 Frame.Active = true
 
 local UICorner = Instance.new("UICorner", Frame)
 UICorner.CornerRadius = UDim.new(0, 12)
+
+-- Stroke for RGB glow
+local UIStroke = Instance.new("UIStroke", Frame)
+UIStroke.Thickness = 3
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 -- Target Name Label
 local TargetLabel = Instance.new("TextLabel", Frame)
@@ -56,16 +61,18 @@ HealthFill.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 local FillCorner = Instance.new("UICorner", HealthFill)
 FillCorner.CornerRadius = UDim.new(0, 6)
 
--- RGB effect for name
+-- 🌈 Arcelik RGB Effect (whole UI border)
 task.spawn(function()
     local hue = 0
-    while task.wait() do
+    while task.wait(0.03) do
         hue = (hue + 0.01) % 1
-        TargetLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
+        local rgb = Color3.fromHSV(hue, 1, 1)
+        UIStroke.Color = rgb -- RGB Border
+        TargetLabel.TextColor3 = rgb -- Also makes text glow rainbow
     end
 end)
 
--- ✅ Mobile/PC Dragging System
+-- ✅ Mobile/PC Dragging
 local dragging = false
 local dragStart, startPos
 
@@ -101,7 +108,7 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- Enemy Tracking Loop
+-- Enemy Tracking
 task.spawn(function()
     while task.wait(0.2) do
         local character = LocalPlayer.Character

@@ -1,0 +1,87 @@
+getgenv().AutoFarmV2 = true
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+task.spawn(function()
+    while task.wait() do
+        if not getgenv().AutoFarmV2 then break end
+
+        local character = LocalPlayer.Character
+        local humanoid = character and character:FindFirstChild("Humanoid")
+
+        if not character then
+            repeat
+                task.wait()
+                character = LocalPlayer.Character
+            until character or not getgenv().AutoFarmV2
+        end
+
+        if not humanoid then
+            repeat
+                task.wait()
+                humanoid = character and character:FindFirstChild("Humanoid")
+            until humanoid or not getgenv().AutoFarmV2
+        end
+
+        if humanoid and humanoid.Health <= 0 then
+            repeat
+                task.wait()
+                character = LocalPlayer.Character
+                humanoid = character and character:FindFirstChild("Humanoid")
+            until (humanoid and humanoid.Health > 0) or not getgenv().AutoFarmV2
+        end
+
+        if not getgenv().AutoFarmV2 then break end
+
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local closestEnemy = nil
+            local shortestDistance = math.huge
+
+            for _, v in pairs(workspace.Enemys:GetChildren()) do
+                if v:IsA("Model") then
+                    local hum = v:FindFirstChild("Humanoid")
+                    local hrp = v:FindFirstChild("HumanoidRootPart")
+
+                    for _, part in pairs(v:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+
+                    if hum and hrp and hum.Health > 0 then
+                        local distance = (character.HumanoidRootPart.Position - hrp.Position).Magnitude
+                        if distance < shortestDistance then
+                            closestEnemy = v
+                            shortestDistance = distance
+                        end
+                    end
+                end
+            end
+
+            if closestEnemy then
+                local enemyHRP = closestEnemy:FindFirstChild("HumanoidRootPart")
+                if enemyHRP then
+                    pcall(function()
+                        character.HumanoidRootPart.CFrame = enemyHRP.CFrame + Vector3.new(0, -6.1, 0)
+                        local bv = Instance.new("BodyVelocity")
+                        bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                        bv.Velocity = Vector3.new(0, 0, 0)
+                        bv.Parent = character.HumanoidRootPart
+                        task.wait()
+                        bv:Destroy()
+                    end)
+                end
+            else
+                pcall(function()
+                    character.HumanoidRootPart.CFrame = CFrame.new(-17.3815, 4.6, 95.7877)
+                    local bv = Instance.new("BodyVelocity")
+                    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                    bv.Velocity = Vector3.new(0, 0, 0)
+                    bv.Parent = character.HumanoidRootPart
+                    task.wait()
+                    bv:Destroy()
+                end)
+            end
+        end
+    end
+end)

@@ -28,7 +28,7 @@ local UIStroke = Instance.new("UIStroke", Frame)
 UIStroke.Thickness = 2
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
--- 🔘 Toggle Button (always visible)
+-- 🔘 Toggle Button
 local ToggleButton = Instance.new("TextButton", ScreenGui)
 ToggleButton.Size = UDim2.new(0, 50, 0, 22)
 ToggleButton.Position = UDim2.new(0.5, -25, 0, 20)
@@ -92,7 +92,7 @@ task.spawn(function()
     end
 end)
 
--- 📌 Dragging function
+-- 📌 Dragging
 local function makeDraggable(guiObject)
     local dragging, dragStart, startPos
     guiObject.InputBegan:Connect(function(input)
@@ -121,15 +121,19 @@ local function makeDraggable(guiObject)
         end
     end)
 end
-
--- Enable dragging for both
 makeDraggable(Frame)
 makeDraggable(ToggleButton)
 
--- 🔄 Hide/Show logic
+-- 🔄 Hide/Show
 ToggleButton.MouseButton1Click:Connect(function()
     Frame.Visible = not Frame.Visible
     ToggleButton.Text = Frame.Visible and "Hide" or "Show"
+end)
+
+-- 🎬 Animate Health Bar
+local currentRatio = 1
+RunService.RenderStepped:Connect(function()
+    HealthBar.Size = UDim2.new(currentRatio, 0, 1, 0)
 end)
 
 -- 🔎 Track Closest Enemy
@@ -143,7 +147,7 @@ task.spawn(function()
         if not hrp then
             TargetLabel.Text = "Target: None"
             HealthLabel.Text = "HP: 0 / 0"
-            HealthBar.Size = UDim2.new(0, 0, 1, 0)
+            currentRatio = 0
             continue
         end
 
@@ -166,13 +170,22 @@ task.spawn(function()
             TargetLabel.Text = "Target: " .. (closestEnemy.Name or "Unknown")
             if hum then
                 HealthLabel.Text = "HP: " .. math.floor(hum.Health) .. " / " .. math.floor(hum.MaxHealth)
-                local ratio = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
-                HealthBar.Size = UDim2.new(ratio, 0, 1, 0)
+                local targetRatio = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
+                -- Smooth animation
+                task.spawn(function()
+                    local start = currentRatio
+                    local steps = 15
+                    for i = 1, steps do
+                        currentRatio = start + (targetRatio - start) * (i / steps)
+                        task.wait(0.02)
+                    end
+                    currentRatio = targetRatio
+                end)
             end
         else
             TargetLabel.Text = "Target: None"
             HealthLabel.Text = "HP: 0 / 0"
-            HealthBar.Size = UDim2.new(0, 0, 1, 0)
+            currentRatio = 0
         end
     end
 end)
